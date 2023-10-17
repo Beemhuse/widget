@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chat Widget</title>
+    <style>
+        .chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #f1f1f1;
+        }
+        .items{
+            position: fixed;
+            bottom:0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat"></div>
+    <div class="items">
+
+        <input type="text" id="messageInput" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function addChatMessage(content, user) {
+            const chatDiv = document.getElementById('chat');
+            const newChatMessage = document.createElement('div');
+            newChatMessage.classList.add('chat');
+            newChatMessage.innerHTML = `<strong>${user}: </strong>${content}`;
+            chatDiv.appendChild(newChatMessage);
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageContent = messageInput.value.trim();
+            if (messageContent) {
+                parent.postMessage({
+                    type: 'message',
+                    message: messageContent
+                }, '*');
+
+                addChatMessage(messageContent, 'User');
+
+                messageInput.value = '';
+            }
+        }
+
+        window.addEventListener('message', function (event) {
+            const message = event.data;
+            if (message.type === 'message') {
+                addChatMessage(message.message, 'Server');
+            }
+        });
+    </script>
+</body>
+
+</html>
