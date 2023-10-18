@@ -1,7 +1,7 @@
 (function() {
     const conversationId = 10
-    const userId = 'user-id'
-    const customerId = 'customer-id'
+    const userId = 10
+    const customerId = 5
     
     const ChatWidget = {
         socket: null,
