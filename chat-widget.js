@@ -10,6 +10,10 @@
 
             const chatWidgetContainer = document.createElement('div');
             chatWidgetContainer.id = 'chatWidgetContainer';
+           
+            document.body.appendChild(chatWidgetContainer);
+
+            const chatContainer = document.createElement('div');
             chatContainer.style.position = 'fixed';
             chatContainer.style.bottom = '20px';
             chatContainer.style.right = '20px';
@@ -18,9 +22,6 @@
             chatContainer.style.border = '1px solid #ccc';
             chatContainer.style.background = '#fff';
             chatContainer.style.overflow = 'auto';
-            document.body.appendChild(chatWidgetContainer);
-
-            const chatContainer = document.createElement('div');
             chatContainer.classList.add('chat-container');
 
             const inputElement = document.createElement('input');
