@@ -1,5 +1,5 @@
 (function() {
-    const conversationId = 'conversation-id'
+    const conversationId = 10
     const userId = 'user-id'
     const customerId = 'customer-id'
     
@@ -28,15 +28,14 @@
             inputElement.setAttribute('type', 'text');
             inputElement.setAttribute('placeholder', 'Type your message...');
             inputElement.classList.add('message-input');
+            chatContainer.appendChild(inputElement); // Add input element to chat container
 
             const sendButton = document.createElement('button');
             sendButton.innerText = 'Send';
             sendButton.addEventListener('click', sendMessage);
+            chatContainer.appendChild(sendButton); // Add send button to chat container
 
             chatWidgetContainer.appendChild(chatContainer);
-            chatWidgetContainer.appendChild(inputElement);
-            chatWidgetContainer.appendChild(sendButton);
-
             this.socket = new WebSocket(socketUrl);
 
             function addChatMessage(content, user) {
