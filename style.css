@@ -1,0 +1,66 @@
+/* styles.css */
+#chatWidgetContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    border: 1px solid #ccc;
+    background: #ff0000;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    overflow: auto;
+    display: none;
+}
+
+.chat_open{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+.hidden {
+    display: none; /* CSS class to hide an element */
+}
+.chat-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 10px;
+}
+
+.message-input {
+    /* position: fixed; */
+    bottom: 0;
+    width: inherit;
+    /* width: calc(100% - 60px); */
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+button {
+    width: 50px;
+    /* height: 40px; */
+    background: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.send-button:hover {
+    background: #45a049;
+}
+
+
+.close_button{
+position: absolute;
+top: 10px;
+right: 10px
+}

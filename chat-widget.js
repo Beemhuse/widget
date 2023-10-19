@@ -6,27 +6,30 @@
     const ChatWidget = {
         socket: null,
         init: function() {
+            const linkElement = document.createElement('link');
+            linkElement.rel = 'stylesheet';
+            linkElement.href = 'style.css'; // Adjust the path if needed
+        
+            // Append the link element to the head of the document
+            document.head.appendChild(linkElement);
+
             const socketUrl = `wss://api.andromedia.cc/ws/chat/${conversationId}/`;
-            let isSending = false; // Flag to prevent multiple message sends
 
             const chatWidgetContainer = document.createElement('div');
             chatWidgetContainer.id = 'chatWidgetContainer';
-           
-            document.body.appendChild(chatWidgetContainer);
+            chatWidgetContainer.classList.add('hidden');
 
+            document.body.appendChild(chatWidgetContainer);
+            // const chatIcon = document.createElement('button');
+            // chatIcon.innerText = 'Chat';
+            // chatIcon.classList.add('chat_open');
+            const chatIcon = document.createElement('img');
+            chatIcon.src = 'chat-icon.png';
+            chatIcon.style.cursor = 'pointer';
+            chatIcon.classList.add('chat_open');
+
+            document.body.appendChild(chatIcon);
             const chatContainer = document.createElement('div');
-            chatContainer.style.position = 'fixed';
-            chatContainer.style.display = 'flex';
-            chatContainer.style.flexDirection = 'column';
-            chatContainer.style.justifyContent = 'end';
-            chatContainer.style.bottom = '20px';
-            chatContainer.style.right = '20px';
-            chatContainer.style.width = '300px'; // Set your desired width
-            chatContainer.style.height = '400px'; // Set your desired height
-            chatContainer.style.border = '1px solid #ccc';
-            chatContainer.style.background = '#ff0000';
-            chatContainer.style.borderTopRightRadius = '20px';
-            chatContainer.style.borderTopLeftRadius = '20px';
 
             chatContainer.style.overflow = 'auto';
             chatContainer.classList.add('chat-container');
@@ -37,10 +40,31 @@
             inputElement.classList.add('message-input');
             chatContainer.appendChild(inputElement); // Add input element to chat container
 
+            // Create the button element to close the chat
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('close_button');
+            closeButton.innerText = 'Close';
+            closeButton.addEventListener('click', toggleChatWidget);
+            chatWidgetContainer.appendChild(closeButton);
            
+
+
             chatWidgetContainer.appendChild(chatContainer);
             this.socket = new WebSocket(socketUrl);
 
+
+            function toggleChatWidget() {
+                console.log('click')
+                chatWidgetContainer.style.display = (chatWidgetContainer.style.display === 'none' || chatWidgetContainer.style.display === '') ? 'block' : 'none';
+                // chatIcon.style.display = (chatIcon.style.display === 'none' || chatIcon.style.display === '') ? 'none' : 'block';
+                chatIcon.style.display = (chatWidgetContainer.style.display === 'none') ? 'block' : 'none';
+                chatIcon.src = (chatWidgetContainer.style.display === 'none') ? 'chat-icon.png' : 'path-to-chat-icon-closed.png';
+
+
+            }
+        
+            // Event listener for chat icon click
+            chatIcon.addEventListener('click', toggleChatWidget);
             function addChatMessage(content, user) {
                 const messageDiv = document.createElement('div');
                 messageDiv.innerText = `${user}: ${content}`;
