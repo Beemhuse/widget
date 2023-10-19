@@ -43,8 +43,8 @@
             inputElement.setAttribute('placeholder', 'Type your message...');
             inputElement.classList.add('message-input');
 
-            messageContainer.appendChild(inputElement); // Add input element to chat container
-            chatContainer.appendChild(messageContainer); // Add input element to chat container
+            messageContainer.appendChild(inputElement); 
+            chatContainer.appendChild(messageContainer); 
 
             // Create the button element to close the chat
             const closeButton = document.createElement('img');
@@ -158,7 +158,12 @@
     window.ChatWidget = ChatWidget;
 
     // Check if there is an initialization function called when script is loaded
+    
     if (window.chatWidgetAsyncInit) {
         window.chatWidgetAsyncInit();
+    } else {
+        // If there is no initialization function, call the init method directly
+        ChatWidget.init();
     }
+    
 })();
