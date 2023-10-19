@@ -78,7 +78,6 @@
 
             chatWidgetContainer.appendChild(topContainer);
             chatWidgetContainer.appendChild(chatContainer);
-            console.log(chatWidgetContainer)
             this.socket = new WebSocket(socketUrl);
 
 
