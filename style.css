@@ -1,12 +1,13 @@
 /* styles.css */
+
 #chatWidgetContainer {
     position: fixed;
+    border: 5px solid black;
     bottom: 20px;
     right: 20px;
-    width: 300px;
-    height: 400px;
+    width: 400px;
+    height: 500px;
     border: 1px solid #ccc;
-    background: #ff0000;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
     overflow: auto;
@@ -21,33 +22,65 @@
 .hidden {
     display: none; /* CSS class to hide an element */
 }
-.chat-container {
+.top_container{
+    /* position: fixed; */
+    /* top: 0; */
+    background-color: red;
+    height: 100px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0 30px;
+
+}
+
+.avatar{
+    height: 80px;
+}
+.chat-container {
+    padding: 0 20px;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    min-height: auto;
+    scroll-behavior: smooth;
+}
+.message-container{
+ display: flex;
+ gap: 5px;
+    align-items: center;
     position: fixed;
-    bottom: 10px;
+    bottom: 30px;
+    right: 20px;
+    width: 380px;
 }
 
 .message-input {
-    /* position: fixed; */
-    bottom: 0;
-    width: inherit;
-    /* width: calc(100% - 60px); */
+    /* width: inherit; */
+    width: calc(100% - 60px);
     padding: 10px;
     border: none;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
 }
 
 .chat-message {
     margin-bottom: 10px;
 }
+.chat-message.user {
+    background-color: #DCF8C6;
+    align-self: flex-end;
+}
+
+.chat-message.server {
+    background-color: #EAEAEA;
+    align-self: flex-start;
+}
 
 button {
     width: 50px;
+    padding: 10px;
     /* height: 40px; */
-    background: #4caf50;
+    border-radius: 10px;
+    background: #489CD1;
     color: white;
     border: none;
     cursor: pointer;
@@ -63,4 +96,31 @@ button {
 position: absolute;
 top: 10px;
 right: 10px
+}
+
+
+
+
+@media only screen and (max-width:600px) {
+
+    #chatWidgetContainer {
+        width: 290px;
+        height: 400px;
+        display: none;
+    }
+    .message-container{
+        display: flex;
+        gap: 5px;
+        align-items: center;
+       position: fixed;
+           bottom: 30px;
+           right: 20px;
+           width: 280px;
+       }
+       
+    .message-input {
+        width: 280px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+    }
 }

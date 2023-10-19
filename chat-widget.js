@@ -20,9 +20,7 @@
             chatWidgetContainer.classList.add('hidden');
 
             document.body.appendChild(chatWidgetContainer);
-            // const chatIcon = document.createElement('button');
-            // chatIcon.innerText = 'Chat';
-            // chatIcon.classList.add('chat_open');
+           
             const chatIcon = document.createElement('img');
             chatIcon.src = 'chat-icon.png';
             chatIcon.style.cursor = 'pointer';
@@ -30,26 +28,57 @@
 
             document.body.appendChild(chatIcon);
             const chatContainer = document.createElement('div');
-
             chatContainer.style.overflow = 'auto';
             chatContainer.classList.add('chat-container');
+
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container');
+            
+            const topContainer = document.createElement('div');
+            topContainer.classList.add('top_container');
+            
 
             const inputElement = document.createElement('input');
             inputElement.setAttribute('type', 'text');
             inputElement.setAttribute('placeholder', 'Type your message...');
             inputElement.classList.add('message-input');
-            chatContainer.appendChild(inputElement); // Add input element to chat container
+
+            messageContainer.appendChild(inputElement); // Add input element to chat container
+            chatContainer.appendChild(messageContainer); // Add input element to chat container
 
             // Create the button element to close the chat
-            const closeButton = document.createElement('button');
+            const closeButton = document.createElement('img');
             closeButton.classList.add('close_button');
-            closeButton.innerText = 'Close';
+            closeButton.src = 'icons-close.png';
+            closeButton.style.cursor = 'pointer';
+            
+            
+            
             closeButton.addEventListener('click', toggleChatWidget);
-            chatWidgetContainer.appendChild(closeButton);
-           
+            topContainer.appendChild(closeButton);
+            
+            // Elements inside the topContainer
+            const dummyImg = document.createElement('img');
+            dummyImg.classList.add('avatar');
+            dummyImg.src = 'avatar.png';
+            dummyImg.style.cursor = 'pointer';
+            
+            const menu = document.createElement('img');
+            // menu.classList.add('');
+            menu.src = 'menu.png';
+            menu.style.cursor = 'pointer';
+            
+            // Text
+            const p = document.createElement('p');
+            p.innerText = 'You are chatting with';
+            p.classList.add('title');
+            topContainer.appendChild(dummyImg);
+            topContainer.appendChild(p);
+            topContainer.appendChild(menu);
 
-
+            chatWidgetContainer.appendChild(topContainer);
             chatWidgetContainer.appendChild(chatContainer);
+            console.log(chatWidgetContainer)
             this.socket = new WebSocket(socketUrl);
 
 
@@ -65,10 +94,16 @@
         
             // Event listener for chat icon click
             chatIcon.addEventListener('click', toggleChatWidget);
-            function addChatMessage(content, user) {
+            function addChatMessage(content,  senderType) {
+                console.log(senderType)
                 const messageDiv = document.createElement('div');
-                messageDiv.innerText = `${user}: ${content}`;
-                messageDiv.classList.add('chat-message');
+                messageDiv.innerText = `${content}`;
+                messageDiv.classList.add('chat-message')
+                 if (senderType === 'user') {
+        messageDiv.classList.add('user');
+    } else if (senderType === 'customer') {
+        messageDiv.classList.add('server'); // Assuming 'server' class corresponds to customer messages
+    }
                 chatContainer.appendChild(messageDiv);
             }
 
@@ -77,16 +112,16 @@
                     const messageInput = inputElement.value.trim();
                     if (messageInput) {
                         const message = {
-                            type: 'message',
                             message: messageInput,
                             conversation: conversationId,
                             sender_id: userId,
                             receiver_id: customerId,
                             sender_type: 'customer',
                             receiver_type: 'user',
+                            created_at: new Date()
                         };
                         this.socket.send(JSON.stringify(message));
-                        addChatMessage(messageInput, 'User');
+                        addChatMessage(messageInput);
                         inputElement.value = '';
                     }
                 } else {
@@ -95,16 +130,20 @@
                 }
             };
     
-    const sendButton = document.createElement('button');
-    sendButton.innerText = 'Send';
+    const sendButton = document.createElement('img');
+    sendButton.src = 'send-icon.png';
+    sendButton.style.cursor = 'pointer';
     sendButton.addEventListener('click', sendMessage);
-    chatContainer.appendChild(sendButton); // Add send button to chat container
+
+    messageContainer.appendChild(sendButton); // Add send button to chat container
 
             this.socket.addEventListener('message', (event) => {
                 const message = JSON.parse(event.data);
+                console.log({message})
                 if (message.type === 'message') {
                     const messageItem = JSON.parse(message.message);
-                    addChatMessage(messageItem.message, 'Server');
+                    const senderType = (messageItem.sender_type === 'customer') ? 'User' : 'Server';
+                    addChatMessage(messageItem.message, senderType);
                 }
             });
 
