@@ -1,103 +1,103 @@
 /* styles.css */
 
 #chatWidgetContainer {
-    position: fixed;
-    border: 5px solid black;
-    bottom: 20px;
-    right: 20px;
-    width: 400px;
-    height: 500px;
-    border: 1px solid #ccc;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-    overflow: auto;
-    display: none;
-    z-index: 11111;
+    position: fixed !important;
+    border: 5px solid black !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 400px !important;
+    height: 500px !important;
+    border: 1px solid #ccc !important;
+    border-top-right-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+    overflow: auto !important;
+    display: none !important;
+    z-index: 11111 !important;
 }
 
 .chat_open{
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1111111;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 1111111 !important;
 }
 .hidden {
-    display: none; /* CSS class to hide an element */
+    display: none !important; /* CSS class to hide an element */
 }
 .top_container{
     /* position: fixed; */
     /* top: 0; */
-    background-color: red;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
+    background-color: red !important;
+    height: 100px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 30px !important;
 
 }
 
 .avatar{
-    height: 80px;
+    height: 80px !important;
 }
 .chat-container {
-    padding: 0 20px;
-    margin-top: 40px;
-    margin-bottom: 50px;
-    min-height: auto;
-    scroll-behavior: smooth;
+    padding: 0 20px !important;
+    margin-top: 40px !important;
+    margin-bottom: 50px !important;
+    min-height: auto !important;
+    scroll-behavior: smooth !important;
 }
 .message-container{
- display: flex;
- gap: 5px;
-    align-items: center;
-    position: fixed;
-    bottom: 30px;
-    right: 20px;
-    width: 380px;
+ display: flex !important;
+ gap: 5px !important;
+    align-items: center !important;
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 20px !important;
+    width: 380px !important;
 }
 
 .message-input {
     /* width: inherit; */
-    width: calc(100% - 60px);
-    padding: 10px;
-    border: none;
-    border-bottom: 1px solid #ccc;
+    width: calc(100% - 60px) !important;
+    padding: 10px !important;
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
 }
 
 .chat-message {
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
 }
 .chat-message.user {
-    background-color: #DCF8C6;
-    align-self: flex-end;
+    background-color: #DCF8C6 !important;
+    align-self: flex-end !important;
 }
 
 .chat-message.server {
-    background-color: #EAEAEA;
-    align-self: flex-start;
+    background-color: #EAEAEA !important;
+    align-self: flex-start !important;
 }
 
 button {
-    width: 50px;
-    padding: 10px;
+    width: 50px !important;
+    padding: 10px !important;
     /* height: 40px; */
-    border-radius: 10px;
-    background: #489CD1;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    border-radius: 10px !important;
+    background: #489CD1 !important;
+    color: white !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
 }
 
 .send-button:hover {
-    background: #45a049;
+    background: #45a049 !important;
 }
 
 
 .close_button{
-position: absolute;
-top: 10px;
-right: 10px
+position: absolute !important;
+top: 10px !important;
+right: 10px !important;
 }
 
 
@@ -106,23 +106,23 @@ right: 10px
 @media only screen and (max-width:600px) {
 
     #chatWidgetContainer {
-        width: 290px;
-        height: 400px;
-        display: none;
+        width: 290px  !important;
+        height: 400px !important;
+        display: none !important;
     }
     .message-container{
-        display: flex;
-        gap: 5px;
-        align-items: center;
-       position: fixed;
-           bottom: 30px;
-           right: 20px;
-           width: 280px;
+        display: flex !important;
+        gap: 5px !important;
+        align-items: center !important;
+       position: fixed !important; 
+           bottom: 30px !important;
+           right: 20px !important;
+           width: 280px !important;
        }
        
     .message-input {
-        width: 280px;
-        border: none;
-        border-bottom: 1px solid #ccc;
+        width: 280px !important;
+        border: none !important;
+        border-bottom: 1px solid #ccc !important;
     }
 }
