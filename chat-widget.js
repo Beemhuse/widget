@@ -8,8 +8,8 @@
         init: function() {
             const linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
-            linkElement.href = 'style.css'; // Adjust the path if needed
-            // linkElement.href = 'https://widget-hgbh.onrender.com/style.css'; // Adjust the path if needed
+            // linkElement.href = 'style.css'; // Adjust the path if needed
+            linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
         
             // Append the link element to the head of the document
             document.head.appendChild(linkElement);
