@@ -8,7 +8,7 @@
         init: function() {
             const linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
-            linkElement.href = 'style.css'; // Adjust the path if needed
+            linkElement.href = 'https://widget-hgbh.onrender.com/style.css'; // Adjust the path if needed
         
             // Append the link element to the head of the document
             document.head.appendChild(linkElement);
@@ -22,7 +22,7 @@
             document.body.appendChild(chatWidgetContainer);
            
             const chatIcon = document.createElement('img');
-            chatIcon.src = 'chat-icon.png';
+            chatIcon.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/chat-icon_lyz27d.png';
             chatIcon.style.cursor = 'pointer';
             chatIcon.classList.add('chat_open');
 
@@ -49,7 +49,7 @@
             // Create the button element to close the chat
             const closeButton = document.createElement('img');
             closeButton.classList.add('close_button');
-            closeButton.src = 'icons-close.png';
+            closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/icons-close_kr11ry.png';
             closeButton.style.cursor = 'pointer';
             
             
@@ -60,12 +60,12 @@
             // Elements inside the topContainer
             const dummyImg = document.createElement('img');
             dummyImg.classList.add('avatar');
-            dummyImg.src = 'avatar.png';
+            dummyImg.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742308/chat/avatar_ye2c4g.png';
             dummyImg.style.cursor = 'pointer';
             
             const menu = document.createElement('img');
             // menu.classList.add('');
-            menu.src = 'menu.png';
+            menu.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/menu_vsqkeb.png';
             menu.style.cursor = 'pointer';
             
             // Text
@@ -86,7 +86,7 @@
                 chatWidgetContainer.style.display = (chatWidgetContainer.style.display === 'none' || chatWidgetContainer.style.display === '') ? 'block' : 'none';
                 // chatIcon.style.display = (chatIcon.style.display === 'none' || chatIcon.style.display === '') ? 'none' : 'block';
                 chatIcon.style.display = (chatWidgetContainer.style.display === 'none') ? 'block' : 'none';
-                chatIcon.src = (chatWidgetContainer.style.display === 'none') ? 'chat-icon.png' : 'path-to-chat-icon-closed.png';
+                chatIcon.src = (chatWidgetContainer.style.display === 'none') ? 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/chat-icon_lyz27d.png' : null;
 
 
             }
@@ -130,7 +130,7 @@
             };
     
     const sendButton = document.createElement('img');
-    sendButton.src = 'send-icon.png';
+    sendButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/send-icon_moe1uo.png';
     sendButton.style.cursor = 'pointer';
     sendButton.addEventListener('click', sendMessage);
 
