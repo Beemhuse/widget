@@ -8,8 +8,8 @@
         init: function() {
             const linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
-            // linkElement.href = 'style.css'; // Adjust the path if needed
-            linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
+            linkElement.href = 'style.css'; // Adjust the path if needed
+            // linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
         
             // Append the link element to the head of the document
             document.head.appendChild(linkElement);
@@ -61,22 +61,42 @@
             // Elements inside the topContainer
             const dummyImg = document.createElement('img');
             dummyImg.classList.add('avatar');
-            dummyImg.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742308/chat/avatar_ye2c4g.png';
+            dummyImg.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697808425/chat/icons8-avatar-50_s7v65b.png';
             dummyImg.style.cursor = 'pointer';
             
+
+
+            const call = document.createElement('img');
+            call.classList.add('call');
+            call.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697808425/chat/icons8-call-48_sf2fl0.png';
+            call.style.cursor = 'pointer';
+
             const menu = document.createElement('img');
-            // menu.classList.add('');
+            menu.classList.add('menu');
             menu.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/menu_vsqkeb.png';
             menu.style.cursor = 'pointer';
             
             // Text
+            const iconsFlex = document.createElement('div');
+            iconsFlex.classList.add('iconsContainer');
+
+            const nameContainer = document.createElement('div');
+            nameContainer.classList.add('nameContainer');
             const p = document.createElement('p');
             p.innerText = 'You are chatting with';
             p.classList.add('title');
-            topContainer.appendChild(dummyImg);
-            topContainer.appendChild(p);
-            topContainer.appendChild(menu);
+            const name = document.createElement('h2');
+            name.innerText = 'Agent 1';
+            name.classList.add('name');
+            nameContainer.appendChild(p)
+            nameContainer.appendChild(name)
+            iconsFlex.appendChild(menu);
+            iconsFlex.appendChild(call);
 
+            topContainer.appendChild(dummyImg);
+            topContainer.appendChild(nameContainer);
+            topContainer.appendChild(iconsFlex);
+            
             chatWidgetContainer.appendChild(topContainer);
             chatWidgetContainer.appendChild(chatContainer);
             this.socket = new WebSocket(socketUrl);
