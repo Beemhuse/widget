@@ -3,22 +3,23 @@
     const userId = 10
     const customerId = 5
     
+    let socket;
     const ChatWidget = {
-        socket: null,
         init: function() {
             const linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
-            // linkElement.href = 'style.css'; // Adjust the path if needed
-            linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
+            linkElement.href = 'style.css'; // Adjust the path if needed
+            // linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
         
             // Append the link element to the head of the document
             document.head.appendChild(linkElement);
 
             const socketUrl = `wss://api.andromedia.cc/ws/chat/${conversationId}/`;
+            socket = new WebSocket(socketUrl)
 
             const chatWidgetContainer = document.createElement('div');
             chatWidgetContainer.id = 'chatWidgetContainer';
-            chatWidgetContainer.classList.add('hidden');
+            chatWidgetContainer.classList.add('containerhidden');
 
             document.body.appendChild(chatWidgetContainer);
            
@@ -51,6 +52,7 @@
             const closeButton = document.createElement('img');
             closeButton.classList.add('close_button');
             closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/icons-close_kr11ry.png';
+            // closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697870065/chat/icons8-down_gjdvwj.gif';
             closeButton.style.cursor = 'pointer';
             
             
@@ -88,8 +90,24 @@
             const name = document.createElement('h2');
             name.innerText = 'Agent 1';
             name.classList.add('name');
-            nameContainer.appendChild(p)
-            nameContainer.appendChild(name)
+           
+        //    Online Status
+        const online = document.createElement('p');
+        online.innerText = 'We are online';
+        online.classList.add('online');
+
+        const onlineImg = document.createElement('img');
+        onlineImg.classList.add('onlineImg');
+        onlineImg.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697869616/chat/icons8-dot-30_kasujc.png';
+        onlineImg.style.cursor = 'pointer';
+
+        const onlineStatus = document.createElement('div');
+        onlineStatus.classList.add('onlineStatus');
+
+        onlineStatus.appendChild(onlineImg)
+        onlineStatus.appendChild(online)
+        nameContainer.appendChild(p)
+
             iconsFlex.appendChild(menu);
             iconsFlex.appendChild(call);
 
@@ -98,8 +116,9 @@
             topContainer.appendChild(iconsFlex);
             
             chatWidgetContainer.appendChild(topContainer);
+            chatWidgetContainer.appendChild(onlineStatus);
             chatWidgetContainer.appendChild(chatContainer);
-            this.socket = new WebSocket(socketUrl);
+            // this.socket = new WebSocket(socketUrl);
 
 
             function toggleChatWidget() {
@@ -112,61 +131,118 @@
 
             }
         
+
+
             // Event listener for chat icon click
             chatIcon.addEventListener('click', toggleChatWidget);
+            
             function addChatMessage(content,  senderType) {
                 console.log(senderType)
                 const messageDiv = document.createElement('div');
                 messageDiv.innerText = `${content}`;
                 messageDiv.classList.add('chat-message')
-                 if (senderType === 'user') {
-        messageDiv.classList.add('user');
-    } else if (senderType === 'customer') {
-        messageDiv.classList.add('server'); // Assuming 'server' class corresponds to customer messages
-    }
+                if (senderType === 'user') {
+                    messageDiv.classList.add('user-message');
+                    messageDiv.style.backgroundColor = '#DCF8C6'; // Example background color for user messages
+                } else if (senderType === 'customer') {
+                    messageDiv.classList.add('customer-message');
+                    messageDiv.style.backgroundColor = '#FFDDC1'; // Example background color for customer messages
+                }
                 chatContainer.appendChild(messageDiv);
             }
 
             const sendMessage = () => {
-                if (this.socket.readyState === WebSocket.OPEN) {
+                if (socket.readyState === WebSocket.OPEN) {
                     const messageInput = inputElement.value.trim();
                     if (messageInput) {
                         const message = {
                             message: messageInput,
                             conversation: conversationId,
-                            sender_id: userId,
+                            sender_id: conversationId,
                             receiver_id: customerId,
                             sender_type: 'customer',
                             receiver_type: 'user',
                             created_at: new Date()
                         };
-                        this.socket.send(JSON.stringify(message));
+                        socket.send(JSON.stringify(message));
+                        console.log('Socket state:', socket.readyState);
+                        console.log('sending message to socket',message)
                         addChatMessage(messageInput);
                         inputElement.value = '';
+
+console.log('Socket state:', socket.readyState);
+
                     }
                 } else {
                     console.error('WebSocket connection is closed. Unable to send message.');
                 
                 }
             };
-    
-    const sendButton = document.createElement('img');
-    sendButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/send-icon_moe1uo.png';
-    sendButton.style.cursor = 'pointer';
-    sendButton.addEventListener('click', sendMessage);
+            
+            console.log('Socket state:', socket.readyState);
 
-    messageContainer.appendChild(sendButton); // Add send button to chat container
+            socket.addEventListener("open", (event) => {
+  console.log('WebSocket connection opened:', event);
+  // The WebSocket connection is now open (readyState 1)
+});
 
-            this.socket.addEventListener('message', (event) => {
-                const message = JSON.parse(event.data);
-                console.log({message})
-                if (message.type === 'message') {
-                    const messageItem = JSON.parse(message.message);
-                    const senderType = (messageItem.sender_type === 'customer') ? 'User' : 'Server';
-                    addChatMessage(messageItem.message, senderType);
-                }
-            });
+console.log('Socket state:', socket.readyState);
 
+socket.addEventListener("message", (event) => {
+    console.log('Message from server:', event.data);
+    try {
+        const receivedMessage = JSON.parse(event.data);
+        if (receivedMessage && receivedMessage.message) {
+            const messageItem = JSON.parse(receivedMessage.message);
+            const senderType = messageItem.sender_type;
+            console.log('Sender Type:', senderType);
+            addChatMessage(messageItem.message, senderType);
+        } else {
+            console.log('Received message with unknown format:', event.data);
+        }
+    } catch (error) {
+        console.error('Error parsing message:', error);
+    }
+});
+
+
+
+const sendButton = document.createElement('img');
+            sendButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/send-icon_moe1uo.png';
+            sendButton.style.cursor = 'pointer';
+            sendButton.addEventListener('click', sendMessage);
+
+            messageContainer.appendChild(sendButton); 
+
+        //     this.socket.addEventListener('message', (event) => {
+        //         console.log("message", event)
+        //         try {
+        //             const message = JSON.parse(event.data);
+        //             console.log(message)
+        //             if (message) {
+        //                 const messageItem = JSON.parse(message.message);
+        //                 const senderType = messageItem.sender_type;
+        //                 console.log('Sender Type:', senderType);
+        //                 addChatMessage(messageItem.message, senderType); // Pass senderType here
+        //             }
+        //             else {
+        //     console.log('Received message with unknown type:', message.type);
+        // }
+        //         } catch (error) {
+        //             console.error('Error parsing message:', error);
+        //         }
+        //     })
+
+            socket.addEventListener('close', (event) => {
+                console.error('Socket closed:', event);
+                // Attempt to reconnect here after a delay (for example, after 5 seconds)
+                setTimeout(() => {
+                    socket = new WebSocket(socketUrl);
+                    this.init(); // Reinitialize the chat widget after reconnecting
+                }, 5000);
+            });    
+            
+          
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     sendMessage();
@@ -175,15 +251,12 @@
         }
     };
 
-    // Expose the ChatWidget object globally for users to access
     window.ChatWidget = ChatWidget;
 
-    // Check if there is an initialization function called when script is loaded
     
     if (window.chatWidgetAsyncInit) {
         window.chatWidgetAsyncInit();
     } else {
-        // If there is no initialization function, call the init method directly
         ChatWidget.init();
     }
     
