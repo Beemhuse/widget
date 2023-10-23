@@ -48,17 +48,14 @@
             messageContainer.appendChild(inputElement); 
             chatContainer.appendChild(messageContainer); 
 
-            // Create the button element to close the chat
             const closeButton = document.createElement('img');
             closeButton.classList.add('close_button');
-            closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/icons-close_kr11ry.png';
-            // closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697870065/chat/icons8-down_gjdvwj.gif';
+            closeButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1698061111/chat/icons8-arrow-down-50_kcenej.png';
             closeButton.style.cursor = 'pointer';
             
             
             
             closeButton.addEventListener('click', toggleChatWidget);
-            topContainer.appendChild(closeButton);
             
             // Elements inside the topContainer
             const dummyImg = document.createElement('img');
@@ -78,6 +75,85 @@
             menu.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/menu_vsqkeb.png';
             menu.style.cursor = 'pointer';
             
+            // Menu modal
+            let modalOpened = false;
+
+            // Event listener to show the modal when the menu is clicked
+            menu.addEventListener('click', function() {
+                if (!modalOpened) {
+                    // Create a modal element
+                    const modal = document.createElement('div');
+                    modal.classList.add('modal');
+            
+                    // Content inside the modal
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <!-- modal content goes here -->
+                            <p>Download transcript</p>
+                            <p>Download transcript</p>
+                            <p>Download transcript</p>
+                            <img class="close-modal" src="https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/icons-close_kr11ry.png" />
+                        </div>
+                    `;
+            
+                    chatWidgetContainer.appendChild(modal);
+            
+                    modalOpened = true;
+            
+                    // Close the modal when the close button is clicked
+                    const closeModalButton = modal.querySelector('.close-modal');
+                    closeModalButton.addEventListener('click', function() {
+                        chatWidgetContainer.removeChild(modal);
+                        modalOpened = false; 
+
+                    });
+                }
+            });
+
+
+// Get IP address
+// Function to get the user's IP address
+            async function getUserIP() {
+  try {
+        const response = await fetch("http://ip-api.com/json");
+        const data = await response.json();
+        console.log({data})
+        return data.query || 'N/A';
+    } catch (error) {
+        console.error('An error occurred while fetching the IP address:', error);
+        return 'N/A';
+    }
+}
+
+            async function getCountryFromIpinfo(ipAddress) {
+  const url = `https://freeipapi.com/api/json/${ipAddress}`;
+  
+  try {
+        const response = await fetch(url);
+        console.log(response)
+        const data = await response.json();
+        const country = data.country || 'N/A';
+        const countryName = data.countryName || 'N/A';
+        const latitude = data.latitude || 'N/A';
+        const longitude = data.longitude || 'N/A';
+        const ip = data.ipAddress || 'N/A';
+        console.log(data);
+
+        console.log(`The country for the IPv6 address ${ipAddress} is ${countryName}`);
+    } catch (error) {
+        console.error('An error occurred while fetching country information:', error);
+    }
+}
+
+// Usage
+getUserIP()
+  .then(ipAddress => {
+    getCountryFromIpinfo(ipAddress);
+  })
+  .catch(error => {
+    console.error('An error occurred:', error);
+  });
+
             // Text
             const iconsFlex = document.createElement('div');
             iconsFlex.classList.add('iconsContainer');
@@ -107,9 +183,11 @@
         onlineStatus.appendChild(onlineImg)
         onlineStatus.appendChild(online)
         nameContainer.appendChild(p)
+        nameContainer.appendChild(name)
 
             iconsFlex.appendChild(menu);
             iconsFlex.appendChild(call);
+            iconsFlex.appendChild(closeButton);
 
             topContainer.appendChild(dummyImg);
             topContainer.appendChild(nameContainer);
