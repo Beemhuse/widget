@@ -113,46 +113,45 @@
 
 // Get IP address
 // Function to get the user's IP address
-            async function getUserIP() {
-  try {
-        const response = await fetch("http://ip-api.com/json");
-        const data = await response.json();
-        console.log({data})
-        return data.query || 'N/A';
-    } catch (error) {
-        console.error('An error occurred while fetching the IP address:', error);
-        return 'N/A';
-    }
-}
+                        async function getUserIP() {
+            try {
+                    const response = await fetch("http://ip-api.com/json");
+                    const data = await response.json();
+                    console.log({data})
+                    return data.query || 'N/A';
+                } catch (error) {
+                    console.error('An error occurred while fetching the IP address:', error);
+                    return 'N/A';
+                }
+            }
 
-            async function getCountryFromIpinfo(ipAddress) {
-  const url = `https://freeipapi.com/api/json/${ipAddress}`;
-  
-  try {
-        const response = await fetch(url);
-        console.log(response)
-        const data = await response.json();
-        const country = data.country || 'N/A';
-        const countryName = data.countryName || 'N/A';
-        const latitude = data.latitude || 'N/A';
-        const longitude = data.longitude || 'N/A';
-        const ip = data.ipAddress || 'N/A';
-        console.log(data);
+                        async function getCountryFromIpinfo(ipAddress) {
+            const url = `https://freeipapi.com/api/json/${ipAddress}`;
+            
+            try {
+                    const response = await fetch(url);
+                    console.log(response)
+                    const data = await response.json();
+                    const country = data.country || 'N/A';
+                    const countryName = data.countryName || 'N/A';
+                    const latitude = data.latitude || 'N/A';
+                    const longitude = data.longitude || 'N/A';
+                    const ip = data.ipAddress || 'N/A';
+                    console.log(data);
+                    console.log(`The country for the IPv6 address ${ipAddress} is ${countryName}`);
+                } catch (error) {
+                    console.error('An error occurred while fetching country information:', error);
+                }
+            }
 
-        console.log(`The country for the IPv6 address ${ipAddress} is ${countryName}`);
-    } catch (error) {
-        console.error('An error occurred while fetching country information:', error);
-    }
-}
-
-// Usage
-getUserIP()
-  .then(ipAddress => {
-    getCountryFromIpinfo(ipAddress);
-  })
-  .catch(error => {
-    console.error('An error occurred:', error);
-  });
+            // Usage
+            // getUserIP()
+            // .then(ipAddress => {
+            //     getCountryFromIpinfo(ipAddress);
+            // })
+            // .catch(error => {
+            //     console.error('An error occurred:', error);
+            // });
 
             // Text
             const iconsFlex = document.createElement('div');
@@ -229,28 +228,89 @@ getUserIP()
                 chatContainer.appendChild(messageDiv);
             }
 
+        //  Form for the email and username
+        const userInfoForm = document.createElement('form');
+    userInfoForm.id = 'userInfoForm';
+    userInfoForm.style.display = 'none';
+
+    const nameLabel = document.createElement('label');
+    nameLabel.setAttribute('for', 'name');
+    nameLabel.textContent = 'Name: ';
+
+    const nameInput = document.createElement('input');
+    nameInput.setAttribute('type', 'text');
+    nameInput.setAttribute('id', 'name');
+    nameInput.setAttribute('required', 'true');
+
+    const emailLabel = document.createElement('label');
+    emailLabel.setAttribute('for', 'email');
+    emailLabel.textContent = 'Email: ';
+
+    const emailInput = document.createElement('input');
+    emailInput.setAttribute('type', 'email');
+    emailInput.setAttribute('id', 'email');
+    emailInput.setAttribute('required', 'true');
+
+    const submitButton = document.createElement('input');
+    submitButton.setAttribute('type', 'submit');
+    submitButton.setAttribute('value', 'Submit');
+    submitButton.classList.add('formSubmit');
+    const namediv = document.createElement('div');
+    namediv.classList.add('nameDiv')
+    namediv.appendChild(nameLabel)
+    namediv.appendChild(nameInput)
+
+    const emailDiv = document.createElement('div');
+    emailDiv.classList.add('emailDiv')
+    emailDiv.appendChild(emailLabel)
+    emailDiv.appendChild(emailInput)
+    userInfoForm.appendChild(namediv);
+    userInfoForm.appendChild(emailDiv);
+        userInfoForm.appendChild(submitButton);
+
+    chatContainer.appendChild(userInfoForm);
+    let userInfo = {
+        name: null,
+        email: null
+    };
             const sendMessage = () => {
                 if (socket.readyState === WebSocket.OPEN) {
                     const messageInput = inputElement.value.trim();
-                    if (messageInput) {
-                        const message = {
-                            message: messageInput,
-                            conversation: conversationId,
-                            sender_id: conversationId,
-                            receiver_id: customerId,
-                            sender_type: 'customer',
-                            receiver_type: 'user',
-                            created_at: new Date()
-                        };
-                        socket.send(JSON.stringify(message));
-                        console.log('Socket state:', socket.readyState);
-                        console.log('sending message to socket',message)
-                        addChatMessage(messageInput);
-                        inputElement.value = '';
-
-console.log('Socket state:', socket.readyState);
-
+                    if (!userInfo.name || !userInfo.email) {
+                        userInfoForm.style.display = 'block';
+            
+                        userInfoForm.addEventListener('submit', function(event) {
+                            event.preventDefault();
+                            userInfo = {
+                                name: nameInput.value,
+                                email: emailInput.value
+                            };
+                            userInfoForm.style.display = 'none';
+                            sendMessage(); // Send the message after user provides name and email
+                        });
+                    } 
+                    else{
+                        if (messageInput) {
+                            const message = {
+                                message: messageInput,
+                                conversation: conversationId,
+                                sender_id: conversationId,
+                                receiver_id: customerId,
+                                sender_type: 'customer',
+                                receiver_type: 'user',
+                                created_at: new Date()
+                            };
+                            socket.send(JSON.stringify(message));
+                            console.log('Socket state:', socket.readyState);
+                            console.log('sending message to socket',message)
+                            addChatMessage(messageInput);
+                            inputElement.value = '';
+    
+    console.log('Socket state:', socket.readyState);
+    
+                        }
                     }
+                   
                 } else {
                     console.error('WebSocket connection is closed. Unable to send message.');
                 
