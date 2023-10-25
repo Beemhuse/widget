@@ -2,19 +2,32 @@
     const conversationId = 10
     const userId = 10
     const customerId = 5
-    
+    // const BASE_URL = 'https://api.andromedia.cc/api/v1'
+    const BASE_URL = 'https://django-andromedia-api-a0c055964407.herokuapp.com/api/v1'
     let socket;
     const ChatWidget = {
         init: function() {
+            async function loadAxios() {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
+                script.type = 'text/javascript';
+                script.async = true;
+                document.head.appendChild(script);
+            
+                return new Promise((resolve) => {
+                    script.onload = resolve;
+                });
+            }
+
             const linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
             // linkElement.href = 'style.css'; // Adjust the path if needed
             linkElement.href = 'https://beemhuse.github.io/widget-styles/style.css'; // Adjust the path if needed
         
-            // Append the link element to the head of the document
             document.head.appendChild(linkElement);
 
-            const socketUrl = `wss://api.andromedia.cc/ws/chat/${conversationId}/`;
+            // const socketUrl = `wss://api.andromedia.cc/ws/chat/${conversationId}/`;
+            const socketUrl = `wss://django-andromedia-api-a0c055964407.herokuapp.com/ws/chat/${conversationId}/`;
             socket = new WebSocket(socketUrl)
 
             const chatWidgetContainer = document.createElement('div');
@@ -55,7 +68,9 @@
             
             
             
+            closeButton.removeEventListener('click', toggleChatWidget);
             closeButton.addEventListener('click', toggleChatWidget);
+            
             
             // Elements inside the topContainer
             const dummyImg = document.createElement('img');
@@ -212,103 +227,247 @@
 
             // Event listener for chat icon click
             chatIcon.addEventListener('click', toggleChatWidget);
+
+            function addChatMessage(messages, senderType) {
+                console.log({messages})
+           {  messages &&  messages.map(messageObj => {
+                    const { message, sender_type  } = messageObj;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('chat-message');
+                    // console.log({messageObj})
+                    // messageDiv.innerText = `${message}`;
+                    messageDiv.key = `${message}`;
             
-            function addChatMessage(content,  senderType) {
-                console.log(senderType)
-                const messageDiv = document.createElement('div');
-                messageDiv.innerText = `${content}`;
-                messageDiv.classList.add('chat-message')
-                if (senderType === 'user') {
-                    messageDiv.classList.add('user-message');
-                    messageDiv.style.backgroundColor = '#DCF8C6'; // Example background color for user messages
-                } else if (senderType === 'customer') {
-                    messageDiv.classList.add('customer-message');
-                    messageDiv.style.backgroundColor = '#FFDDC1'; // Example background color for customer messages
-                }
-                chatContainer.appendChild(messageDiv);
+                    if (sender_type  === 'user') {
+                        messageDiv.classList.add('user');
+                        messageDiv.innerText = `${message}`;
+
+                        messageDiv.style.backgroundColor = '#DCF8C6'; // Example background color for user messages
+                    } else if (sender_type  === 'customer') {
+                        messageDiv.classList.add('customer');
+                        messageDiv.innerText = `${message}`;
+
+                        messageDiv.style.backgroundColor = '#FFDDC1'; // Example background color for customer messages
+                    } else if (read === 'true') {
+                        messageDiv.classList.add('sent-message');
+                        messageDiv.style.backgroundColor = '#BEEFFF'; // Example background color for sent messages
+                    }
+            
+                    chatContainer.appendChild(messageDiv);
+                });
+            }
+            }
+            
+            // addChatMessage()
+
+            function messageExists() {
+                // Check if messages already exist in the chat container
+                return chatContainer.querySelector('.chat-message') !== null;
             }
 
         //  Form for the email and username
         const userInfoForm = document.createElement('form');
-    userInfoForm.id = 'userInfoForm';
-    userInfoForm.style.display = 'none';
+        userInfoForm.id = 'userInfoForm';
+        userInfoForm.style.display = 'none';
 
-    const nameLabel = document.createElement('label');
-    nameLabel.setAttribute('for', 'name');
-    nameLabel.textContent = 'Name: ';
+        const nameLabel = document.createElement('label');
+        nameLabel.setAttribute('for', 'name');
+        nameLabel.textContent = 'Name: ';
 
-    const nameInput = document.createElement('input');
-    nameInput.setAttribute('type', 'text');
-    nameInput.setAttribute('id', 'name');
-    nameInput.setAttribute('required', 'true');
+        const nameInput = document.createElement('input');
+        nameInput.setAttribute('type', 'text');
+        nameInput.setAttribute('id', 'name');
+        nameInput.setAttribute('required', 'true');
 
-    const emailLabel = document.createElement('label');
-    emailLabel.setAttribute('for', 'email');
-    emailLabel.textContent = 'Email: ';
+        const emailLabel = document.createElement('label');
+        emailLabel.setAttribute('for', 'email');
+        emailLabel.textContent = 'Email: ';
 
-    const emailInput = document.createElement('input');
-    emailInput.setAttribute('type', 'email');
-    emailInput.setAttribute('id', 'email');
-    emailInput.setAttribute('required', 'true');
+        const emailInput = document.createElement('input');
+        emailInput.setAttribute('type', 'email');
+        emailInput.setAttribute('id', 'email');
+        emailInput.setAttribute('required', 'true');
 
-    const submitButton = document.createElement('input');
-    submitButton.setAttribute('type', 'submit');
-    submitButton.setAttribute('value', 'Submit');
-    submitButton.classList.add('formSubmit');
-    const namediv = document.createElement('div');
-    namediv.classList.add('nameDiv')
-    namediv.appendChild(nameLabel)
-    namediv.appendChild(nameInput)
+        const submitButton = document.createElement('input');
+        submitButton.setAttribute('type', 'submit');
+        submitButton.setAttribute('value', 'Submit');
+        submitButton.classList.add('formSubmit');
+        const namediv = document.createElement('div');
+        namediv.classList.add('nameDiv')
+        namediv.appendChild(nameLabel)
+        namediv.appendChild(nameInput)
 
-    const emailDiv = document.createElement('div');
-    emailDiv.classList.add('emailDiv')
-    emailDiv.appendChild(emailLabel)
-    emailDiv.appendChild(emailInput)
-    userInfoForm.appendChild(namediv);
-    userInfoForm.appendChild(emailDiv);
-        userInfoForm.appendChild(submitButton);
+        const emailDiv = document.createElement('div');
+        emailDiv.classList.add('emailDiv')
+        emailDiv.appendChild(emailLabel)
+        emailDiv.appendChild(emailInput)
+        userInfoForm.appendChild(namediv);
+        userInfoForm.appendChild(emailDiv);
+            userInfoForm.appendChild(submitButton);
 
-    chatContainer.appendChild(userInfoForm);
-    let userInfo = {
-        name: null,
-        email: null
-    };
+        chatContainer.appendChild(userInfoForm);
+        let userInfo = {
+            name: null,
+            email: null
+        };
+
+// Create conversation Endpoint
+async function createConversationAPI(conversationData) {
+    await loadAxios();
+
+    try {
+        const response = await axios.post(`${BASE_URL}/conversations/create/`, conversationData);
+        console.log('create conversation', response);
+        if (response.status === 200) {
+            return response.data;
+        }
+        return parseError(response);
+    } catch (error) {
+        return parseError(error);
+    }
+}
+async function getConversationsMessages(conversationId) {
+    await loadAxios();
+
+    try {
+        const response = await axios.get(`${BASE_URL}/conversations/${conversationId}/messages/`);
+        console.log('get conversation', response);
+        if (response.status === 200) {
+            return response.data;
+        }
+        return parseError(response);
+    } catch (error) {
+        return parseError(error);
+    }
+}
+// To create conversations messages
+async function createConversationMessages(conversationId, conversationData) {
+    await loadAxios();
+
+    try {
+        const response = await axios.post(`${BASE_URL}/conversations/${conversationId}/messages/create/`, conversationData);
+        console.log('create messages', response);
+        if (response.status === 200) {
+            return response.data;
+        }
+        return parseError(response);
+    } catch (error) {
+        return parseError(error);
+    }
+}
+
+
+function parseError(error) {
+    const data = { error: '' }
+    if (error?.response?.data) {
+      data.error = error.response.data
+    } else if (error?.response?.status) {
+      data.error = error.response.statusText
+    } else {
+      data.error = error.message
+    }
+  
+    return data
+}
+
+// call the getConversationsMessage api
+function getAllConversations(){
+
+    getConversationsMessages(10)
+        .then(conversationData => {
+            console.log('Conversation data:', conversationData);
+            addChatMessage(conversationData);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}    
+getAllConversations()
+
             const sendMessage = () => {
                 if (socket.readyState === WebSocket.OPEN) {
                     const messageInput = inputElement.value.trim();
-                    if (!userInfo.name || !userInfo.email) {
-                        userInfoForm.style.display = 'block';
-            
-                        userInfoForm.addEventListener('submit', function(event) {
-                            event.preventDefault();
-                            userInfo = {
-                                name: nameInput.value,
-                                email: emailInput.value
-                            };
-                            userInfoForm.style.display = 'none';
-                            sendMessage(); // Send the message after user provides name and email
-                        });
-                    } 
-                    else{
+                    if(messageExists()){
                         if (messageInput) {
-                            const message = {
+                           
+                            // createConversationMessagesAPI(conversationId, message)
+                            const messageData = {
                                 message: messageInput,
+                                read: true,
                                 conversation: conversationId,
                                 sender_id: conversationId,
                                 receiver_id: customerId,
-                                sender_type: 'customer',
+                                sender_type: "customer",
                                 receiver_type: 'user',
-                                created_at: new Date()
-                            };
-                            socket.send(JSON.stringify(message));
-                            console.log('Socket state:', socket.readyState);
-                            console.log('sending message to socket',message)
-                            addChatMessage(messageInput);
-                            inputElement.value = '';
-    
-    console.log('Socket state:', socket.readyState);
+            
+                            }
+                            createConversationMessages(conversationId, messageData)
+                                .then(response => {
+                                    console.log('Message sent successfully:', response);
+
+                                })
+                                .catch(error => {
+                                    console.error('Error sending message:', error);
+                                })
+                                .finally(() => {
+                                    const message = {
+                                        message: messageInput,
+                                        conversation: conversationId,
+                                        sender_id: conversationId,
+                                        receiver_id: customerId,
+                                        sender_type: 'customer',
+                                        receiver_type: 'user',
+                                        created_at: new Date()
+                                    };
+                                    socket.send(JSON.stringify(message));
+                                    console.log('Socket state:', socket.readyState);
+                                    console.log('sending message to socket',message)
+                                    addChatMessage(messageInput, 'sent');
+                                    inputElement.value = '';
+            
+                                    console.log('Socket state:', socket.readyState);
+                                })
+            
+                          
     
                         }
+                    }
+                   
+                    else{
+                        if (!userInfo.name || !userInfo.email) {
+                            userInfoForm.style.display = 'block';
+                            userInfoForm.addEventListener('submit', function(event) {
+                                event.preventDefault();
+                                userInfo = {
+                                    name: nameInput.value,
+                                    email: emailInput.value
+                                };
+    
+                                 const data = {
+                                            chat_status: 'active',
+                                            session_key: "200",
+                                            customer_location: 'home',
+                                            company: 2,
+                                            agent: 1,
+                                            customer: 2
+                                        }
+                                createConversationAPI(data)
+                                .then(response => {
+                                    // Handle the successful response here
+                                    console.log('Conversation created successfully:', response);
+                                })
+                                .catch(error => {
+                                    // Handle the error response here
+                                    console.error('Error creating conversation:', error);
+                                })
+                                .finally(()=>{
+                                userInfoForm.style.display = 'none';
+                                sendMessage(); // Send the message after user provides name and email
+                                })
+    
+                            });
+                        } 
                     }
                    
                 } else {
@@ -326,7 +485,7 @@
 
 console.log('Socket state:', socket.readyState);
 
-socket.addEventListener("message", (event) => {
+socket.addEventListener("message", async (event) => {
     console.log('Message from server:', event.data);
     try {
         const receivedMessage = JSON.parse(event.data);
@@ -334,7 +493,12 @@ socket.addEventListener("message", (event) => {
             const messageItem = JSON.parse(receivedMessage.message);
             const senderType = messageItem.sender_type;
             console.log('Sender Type:', senderType);
-            addChatMessage(messageItem.message, senderType);
+            if (senderType === 'system') {
+                addChatMessage('', senderType, receivedMessage.conversation_data);
+            } else {
+                addChatMessage(messageItem.message, senderType);
+            }
+            
         } else {
             console.log('Received message with unknown format:', event.data);
         }
@@ -344,32 +508,12 @@ socket.addEventListener("message", (event) => {
 });
 
 
-
 const sendButton = document.createElement('img');
             sendButton.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/send-icon_moe1uo.png';
             sendButton.style.cursor = 'pointer';
             sendButton.addEventListener('click', sendMessage);
 
             messageContainer.appendChild(sendButton); 
-
-        //     this.socket.addEventListener('message', (event) => {
-        //         console.log("message", event)
-        //         try {
-        //             const message = JSON.parse(event.data);
-        //             console.log(message)
-        //             if (message) {
-        //                 const messageItem = JSON.parse(message.message);
-        //                 const senderType = messageItem.sender_type;
-        //                 console.log('Sender Type:', senderType);
-        //                 addChatMessage(messageItem.message, senderType); // Pass senderType here
-        //             }
-        //             else {
-        //     console.log('Received message with unknown type:', message.type);
-        // }
-        //         } catch (error) {
-        //             console.error('Error parsing message:', error);
-        //         }
-        //     })
 
             socket.addEventListener('close', (event) => {
                 console.error('Socket closed:', event);
