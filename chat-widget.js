@@ -2,6 +2,8 @@
     const conversationId = 10
     const userId = 10
     const customerId = 5
+    var latitude;
+    var longitude;
     // const BASE_URL = 'https://api.andromedia.cc/api/v1'
     const BASE_URL = 'https://django-andromedia-api-a0c055964407.herokuapp.com/api/v1'
     let socket;
@@ -149,8 +151,8 @@
                     const data = await response.json();
                     const country = data.country || 'N/A';
                     const countryName = data.countryName || 'N/A';
-                    const latitude = data.latitude || 'N/A';
-                    const longitude = data.longitude || 'N/A';
+                     latitude = data.latitude || 'N/A';
+                     longitude = data.longitude || 'N/A';
                     const ip = data.ipAddress || 'N/A';
                     console.log(data);
                     console.log(`The country for the IPv6 address ${ipAddress} is ${countryName}`);
@@ -230,13 +232,17 @@
 
             function addChatMessage(messages, senderType) {
                 console.log({messages})
-           {  messages &&  messages.map(messageObj => {
-                    const { message, sender_type  } = messageObj;
+
+                if (!Array.isArray(messages)) {
+                    // Convert non-array messages to an array
+                    messages = [messages];
+                }
+           {  messages &&  messages.reverse().map((messageObj, index) => {
+                    const { message, sender_type, read  } = messageObj;
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('chat-message');
-                    // console.log({messageObj})
-                    // messageDiv.innerText = `${message}`;
-                    messageDiv.key = `${message}`;
+                    
+                    messageDiv.key = `${index}`;
             
                     if (sender_type  === 'user') {
                         messageDiv.classList.add('user');
@@ -256,6 +262,9 @@
                     chatContainer.appendChild(messageDiv);
                 });
             }
+            
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
             }
             
             // addChatMessage()
@@ -447,7 +456,7 @@ getAllConversations()
                                  const data = {
                                             chat_status: 'active',
                                             session_key: "200",
-                                            customer_location: 'home',
+                                            customer_location: latitude, longitude,
                                             company: 2,
                                             agent: 1,
                                             customer: 2
