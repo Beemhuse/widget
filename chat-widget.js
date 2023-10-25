@@ -32,11 +32,13 @@
             const socketUrl = `wss://django-andromedia-api-a0c055964407.herokuapp.com/ws/chat/${conversationId}/`;
             socket = new WebSocket(socketUrl)
 
-            const chatWidgetContainer = document.createElement('div');
-            chatWidgetContainer.id = 'chatWidgetContainer';
-            chatWidgetContainer.classList.add('containerhidden');
-
-            document.body.appendChild(chatWidgetContainer);
+            document.addEventListener('DOMContentLoaded', function() {
+                const chatWidgetContainer = document.createElement('div');
+                chatWidgetContainer.id = 'chatWidgetContainer';
+                chatWidgetContainer.classList.add('containerhidden');
+                document.body.appendChild(chatWidgetContainer);
+            });
+            
            
             const chatIcon = document.createElement('img');
             chatIcon.src = 'https://res.cloudinary.com/dj3zrsni6/image/upload/v1697742309/chat/chat-icon_lyz27d.png';
